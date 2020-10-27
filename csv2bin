@@ -1,0 +1,13 @@
+import fileinput
+
+with open("data.bin", 'wb') as f:
+    for i, line in enumerate(fileinput.input()):
+        hash = line.rstrip()[2:]
+        try:
+            hash = bytearray.fromhex(hash)
+            f.write(hash)
+        except Exception:
+            print(line)
+            break
+
+
