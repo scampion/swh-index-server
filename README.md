@@ -37,6 +37,34 @@ To speed up the binary search algorithm on the disk, we can reduce the search sp
 We will sample the file in memory and use the same approach. 
 
 
+Here is an example: 
+
+ Memory sampling                                             Sorted SHA1 file
++----------------------------------------+                   +----------------------------------------+
+|495fe31da0d856520fbffa39757d870aa138f235+----------+        |0926712bd5ad41e9cd760b16b81c58c98bcc7df1|
+|7bfc1985bb2b90ebbb48091f7388962e38033a8e|------+   |        |1049c1dc212502dabbc3f5206a650ed416cf4f2a|
+|c6917521f775b154a177d1d36999152f221e009d|---+  |   |        |309a9cfbadbebb58b43d1d45fa0a290f2303ea1c|
+|f06d70b6063150edeaf7acf146a954a0257448dd+-+ |  |   |        |3eb661cc6fe203d2808f25754f822cbfd3262bae|
++----------------------------------------+ | |  |   +-------->495fe31da0d856520fbffa39757d870aa138f235|
+                                           | |  |            |4c7a0bb79b6e30ad11b9da6041945b3accb087d5|
+                                           | |  |            |5950680f43da283f82af411164be609edf9b847e|
+                                           | |  |            |59dc4e9aead49e5b4837b75be83ea6737350c69e|
+                                           | |  |            |72b390514d1e7b7273989c4362dc0cda2f644597|
+                                           | |  +------------>7bfc1985bb2b90ebbb48091f7388962e38033a8e|
+                                           | |               |865070c9b8f82e014149f3ff15b2065b165fd407|
+                                           | |               |bbc9e5b3022d7b220e557d4f8e970f51f57aba44|
+                                           | |               |be177fe5bdc9d60a7e882d5b1203f1ba7113390f|
+                                           | |               |c2aa971b9a0fe2928b1e189e5204c85accd81915|
+                                           | +--------------->c6917521f775b154a177d1d36999152f221e009d|
+                                           |                 |c98bc56e3a199516932d22c19dead67905960463|
+                                           |                 |dc9d6333f297aa4d7e5d6a622adc2182846b8b1f|
+                                           |                 |df79de8c1b84ebf369280c8bc3a9c77fb733ed16|
+                                           |                 |e652e8387dc06c399d76c995216ac808016d65c7|
+                                           +----------------->f06d70b6063150edeaf7acf146a954a0257448dd|
+                                                             +----------------------------------------+
+
+
+
 Step by step: 
 -------------
 
