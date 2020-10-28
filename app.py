@@ -76,15 +76,15 @@ def is_present(q):
 @app.route('/')
 @app.route('/<string:query>')
 def home(query=None):
-    if not query:
-        return Response(open('README.md','rb').read(), mimetype='text/plain')
-    else:
+    if query:
         q = bytearray.fromhex(query)
         log.info("query : %s", b2a(q))
         if is_present(q):
             return '', 200
         else:
             abort(404)
+    else:
+        return Response(open('README.md', 'rb').read(), mimetype='text/plain')
 
 
 if __name__ == '__main__':
