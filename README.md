@@ -38,7 +38,7 @@ We will sample the file in memory and use the same approach.
 
 
 Here is an example: 
-
+```
  Memory sampling                                             Sorted SHA1 file
 +----------------------------------------+                   +----------------------------------------+
 |495fe31da0d856520fbffa39757d870aa138f235+----------+        |0926712bd5ad41e9cd760b16b81c58c98bcc7df1|
@@ -62,7 +62,7 @@ Here is an example:
                                            |                 |e652e8387dc06c399d76c995216ac808016d65c7|
                                            +----------------->f06d70b6063150edeaf7acf146a954a0257448dd|
                                                              +----------------------------------------+
-
+```
 
 
 Step by step: 
