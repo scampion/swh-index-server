@@ -1,28 +1,28 @@
-import binascii
-import logging as log
 import os
 from math import floor, ceil
+import logging as log
+import binascii
 
-from flask import Flask, abort
+from flask import Flask, abort, Response
 
 SHA1_SIZE_IN_BYTES = 20
 SORTED_INDEX_FILEPATH = "data.bin"
 
-log.basicConfig(level=log.DEBUG)
+log.basicConfig(level=log.INFO)
 app = Flask(__name__)
-idx = b''
 mem_bytes = os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES')
+index_memory_size = max(1024, mem_bytes - 0.5 * (1024. ** 3) * 80.0 / 100)
+index_memory_size = int(os.environ.get('INDEX_MEMORY_SIZE', index_memory_size))
+sample_index_interval = int(os.stat(SORTED_INDEX_FILEPATH).st_size / index_memory_size)
+
 log.info("%s bytes of memory available", mem_bytes)
-preindex_memory_size = max(1024, mem_bytes - 0.5 * (1024. ** 3) * 80.0 / 100) # we use 1KB of memory or 80% of the available memory
-preindex_memory_size = int(os.environ.get('PREINDEX_MEMORY_SIZE', preindex_memory_size))
-sample_index_interval = int(os.stat(SORTED_INDEX_FILEPATH).st_size / preindex_memory_size)
-
+log.info("%s index_memory_size", index_memory_size)
+log.info("sorted index size %s", os.stat(SORTED_INDEX_FILEPATH).st_size)
 log.info("Sample index interval : %d", sample_index_interval)
+assert index_memory_size < os.stat(SORTED_INDEX_FILEPATH).st_size, "Binary file fit in memory, exit"
 
-def b2a(s):
-    return binascii.hexlify(s).decode("ascii")[:10] + "."
 
-print(os.path.isdir(SORTED_INDEX_FILEPATH))
+idx = b''
 with open(SORTED_INDEX_FILEPATH, "rb") as f:
     sig = f.read(SHA1_SIZE_IN_BYTES)
     i = 1
@@ -33,6 +33,9 @@ with open(SORTED_INDEX_FILEPATH, "rb") as f:
         i += 1
         progress = (i * SHA1_SIZE_IN_BYTES / os.stat(SORTED_INDEX_FILEPATH).st_size * 100)
         print("Indexation in progress : %2d%%" % progress, end='\r')
+
+def b2a(s):
+    return binascii.hexlify(s).decode("ascii")[:10] + "."
 
 def get_file_position(q):
     length = len(idx) / SHA1_SIZE_IN_BYTES
@@ -72,12 +75,16 @@ def is_present(q):
 
 @app.route('/')
 @app.route('/<string:query>')
-def home(query):
-    q = bytearray.fromhex(query)
-    if is_present(q):
-        return '', 200
+def home(query=None):
+    if not query:
+        return Response(open('README.md','rb').read(), mimetype='text/plain')
     else:
-        abort(404)
+        q = bytearray.fromhex(query)
+        log.info("query : %s", b2a(q))
+        if is_present(q):
+            return '', 200
+        else:
+            abort(404)
 
 
 if __name__ == '__main__':
