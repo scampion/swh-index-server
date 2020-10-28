@@ -17,7 +17,7 @@ But the SWH API request rate is limited and you will not be able to analyze your
 The solution:
 -------------
 
-You can download the latest SWH dump "The Software Heritage Graph Dataset" (here for example : https://zenodo.org/record/2583978)
+You can download the latest SWH dump "[The Software Heritage Graph Dataset](https://zenodo.org/record/2583978)"
 and run you own and dedicated HTTP service.
 
 But, it's huge. Indeed, 9 billions files, 20 bytes per sha1 : 180GB  
@@ -41,9 +41,7 @@ Step by step:
 -------------
 
 
-1. From Zenodo, download the sql_content.csv.gz file 
-
-	https://zenodo.org/record/2583978/files/sql_content.csv.gz?download=1
+1. From Zenodo, download the [sql_content.csv.gz file](https://zenodo.org/record/2583978/files/sql_content.csv.gz?download=1)
 
 2. Build the SHA1 file index
 
