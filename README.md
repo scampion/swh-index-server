@@ -27,7 +27,7 @@ The second one, is detailed below.
 How to do that: 
 ---------------
 
-There is no miracle, data doesn't fit in memory so for each request will search in the file. 
+There is no miracle, data doesn't fit in memory so for each request we will search in the file. 
 (If possible, I recommend an SSD hard drive)
 
 To find the sha1 efficiently we will sort the sha1 file and use binary search algorithm.
