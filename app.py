@@ -18,21 +18,20 @@ sample_index_interval = int(os.stat(SORTED_INDEX_FILEPATH).st_size / index_memor
 log.info("%s bytes of memory available", mem_bytes)
 log.info("%s index_memory_size", index_memory_size)
 log.info("sorted index size %s", os.stat(SORTED_INDEX_FILEPATH).st_size)
-log.info("Sample index interval : %d", sample_index_interval)
+log.info("sample index interval : %d", sample_index_interval)
 assert index_memory_size < os.stat(SORTED_INDEX_FILEPATH).st_size, "Binary file fit in memory, exit"
 
 
 idx = b''
 with open(SORTED_INDEX_FILEPATH, "rb") as f:
     sig = f.read(SHA1_SIZE_IN_BYTES)
-    i = 1
     while sig:
-        if i % sample_index_interval == 0:
+        if (f.tell() / SHA1_SIZE_IN_BYTES)  % sample_index_interval == 0:
             idx += sig
+        if (f.tell() / SHA1_SIZE_IN_BYTES)  % (sample_index_interval * 100) == 0:
+            progress = f.tell() / os.stat(SORTED_INDEX_FILEPATH).st_size * 100.0
+            print("Indexation in progress : %2d%%" % progress, end='\r')
         sig = f.read(SHA1_SIZE_IN_BYTES)
-        i += 1
-        progress = (i * SHA1_SIZE_IN_BYTES / os.stat(SORTED_INDEX_FILEPATH).st_size * 100)
-        print("Indexation in progress : %2d%%" % progress, end='\r')
 
 def b2a(s):
     return binascii.hexlify(s).decode("ascii")[:10] + "."
